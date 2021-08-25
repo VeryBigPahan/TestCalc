@@ -1,104 +1,76 @@
 package com.company;
 
-import javax.swing.*;
-import java.util.Objects;
-import java.util.Scanner;
+import com.company.exception.ExpressionException;
+import com.company.exception.Messages;
+import com.company.utils.Utils;
+import com.company.validation.Validator;
 
-import static com.company.Utils.ARA_TO_ROM;
+import java.util.Scanner;
 
 public class Main {
 
+    private final static String WELCOME_MESSAGE = "Введите выражение: ";
+    private final static String SPACE = " ";
+    private final static Validator validator = new Validator();
+
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-        System.out.print("Введите выражение: ");
-        String eq = in.nextLine();
-        eq = eq.trim();
-        String[] parts = eq.split(" ");
-        int el = parts.length;
-        if (el == 1){
-            System.out.print("Не является математической операцией");
-        }
-        else if (el != 3) {
-            System.out.print("Слишком много операндов и/или операторов");
-        }
-        else {
-            String p1 = parts[0];
-            String p2 = parts[1];
-            String p3 = parts[2];
-            MyNumber n1 = new MyNumber();
-            MyNumber n2 = new MyNumber();
-            n1.setValue(p1);
-            n2.setValue(p3);
-            int v1 = n1.getValue();
-            int v2 = n2.getValue();
-            String s1 = n1.getNumsys();
-            String s2 = n2.getNumsys();
-            int result;
-            if (Objects.equals(s1, "na") || Objects.equals(s2, "na")) {
-                System.out.print("Введены некорректные числа");
-            } else if (!Objects.equals(s1, s2)) {
-                System.out.print("Не совпадают системы счисления");
-            } else if (Objects.equals(s1, "arabic")) {
-                switch (p2) {
-                    case "-":
-                        System.out.println(v1 - v2);
-                        break;
-                    case "+":
-                        System.out.println(v1 + v2);
-                        break;
-                    case "*":
-                        System.out.println(v1 * v2);
-                        break;
-                    case "/":
-                        System.out.println(v1 / v2);
-                        break;
-                    default:
-                        System.out.print("Неверный тип операции");
-                }
-            } else {
-                switch (p2) {
-                    case "-":
-                        result = v1 - v2;
-                        if (result == 0) {
-                            System.out.print("В римской системе нет 0");
-                        } else if (result < 0) {
-                            System.out.print("В римской системе нет отрицательных чисел");
-                        } else {
-                            System.out.println(ARA_TO_ROM.get(result));
-                        }
-                        break;
-                    case "+":
-                        result = v1 + v2;
-                        if (result > 10){
-                            System.out.printf("Очень большое римское число( %d - арабский вариант)", result);
-                        }
-                        else {
-                            System.out.println(ARA_TO_ROM.get(result));
-                        }
-                        break;
-                    case "*":
-                        result = v1 * v2;
-                        if (result > 10){
-                            System.out.printf("Очень большое римское число( %d - арабский вариант)", result);
-                        }
-                        else {
-                            System.out.println(ARA_TO_ROM.get(result));
-                        }
-                        break;
-                    case "/":
-                        result = v1 / v2;
-                        if (result == 0) {
-                            System.out.print("В римской системе нет 0");
-                        }
-                        else {
-                            System.out.println(ARA_TO_ROM.get(result));
-                        }
-                        break;
-                    default:
-                        System.out.print("Неверный тип операции");
-                        break;
-                }
-            }
+        System.out.print(WELCOME_MESSAGE);
+
+        String expression = in.nextLine();
+        expression = expression.trim();
+        String[] parts = expression.split(SPACE);
+
+        validator.validateExpression(parts.length);
+
+        String firstRawNumber = parts[0];
+        String operation = parts[1];
+        String secondRawNumber = parts[2];
+
+        MyNumber firstNumber = new MyNumber(firstRawNumber);
+        MyNumber secondNumber = new MyNumber(secondRawNumber);
+
+        int firstNumberValue = firstNumber.getValue();
+        int secondNumberValue = secondNumber.getValue();
+        String firstNumberNumsys = firstNumber.getNumsys();
+        String secondNumberNumsys = secondNumber.getNumsys();
+
+        validator.validateNumberSys(firstNumberNumsys, secondNumberNumsys);
+
+        if (MyNumber.ARABIAN_NUMBER_SYS.equals(firstNumberNumsys)) {
+            System.out.println(evaluateArabianNumbers(operation, firstNumberValue, secondNumberValue));
+        } else {
+            System.out.println(evaluateRomanNumbers(operation, firstNumberValue, secondNumberValue));
         }
     }
+
+    private static String evaluateRomanNumbers(String operation, int firstNumberValue, int secondNumberValue) {
+        int result = evaluateArabianNumbers(operation, firstNumberValue, secondNumberValue);
+
+        validator.validateRomanNumbers(result, operation);
+        return Utils.ARA_TO_ROM.get(result);
+    }
+
+    private static int evaluateArabianNumbers(String operation, int firstNumberValue, int secondNumberValue) {
+        int result;
+        switch (operation) {
+            case "-":
+                result = firstNumberValue - secondNumberValue;
+                break;
+            case "+":
+                result = firstNumberValue + secondNumberValue;
+                break;
+            case "*":
+                result = firstNumberValue * secondNumberValue;
+                break;
+            case "/":
+                result = firstNumberValue / secondNumberValue;
+                break;
+            default:
+                throw new ExpressionException(Messages.INVALID_OPERATION_TYPE);
+        }
+
+        return result;
+    }
+
 }
