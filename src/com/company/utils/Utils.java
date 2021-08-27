@@ -1,19 +1,27 @@
 package com.company.utils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+
 
 public class Utils {
-    public static final Map<Integer, String> ARA_TO_ROM = new HashMap<Integer, String>(){{
-        put(1,"I");
-        put(2,"II");
-        put(3,"III");
-        put(4,"IV");
-        put(5,"V");
-        put(6,"VI");
-        put(7,"VII");
-        put(8,"VIII");
-        put(9,"IX");
-        put(10,"X");
-    }};
+
+    public static String arabicToRoman(int number) {
+
+        List<AraToRom> romanNumerals = AraToRom.getReverseSortedValues();
+
+        int i = 0;
+        StringBuilder sb = new StringBuilder();
+
+        while ((number > 0) && (i < romanNumerals.size())) {
+            AraToRom currentSymbol = romanNumerals.get(i);
+            if (currentSymbol.getRomvalue() <= number) {
+                sb.append(currentSymbol.name());
+                number -= currentSymbol.getRomvalue();
+            } else {
+                i++;
+            }
+        }
+
+        return sb.toString();
+    }
 }

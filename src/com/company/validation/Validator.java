@@ -33,10 +33,6 @@ public class Validator {
                 break;
             case "+":
             case "*":
-                if (result > 10) {
-                    throw new ExpressionException(String.format(Messages.VERY_LARGE_ROMAN_NUMBER, result));
-                }
-                break;
             case "/":
                 if (result == 0) {
                     throw new ExpressionException(Messages.ROMAN_HAS_NOT_ZERO_NUMBER);

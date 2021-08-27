@@ -48,7 +48,7 @@ public class Main {
         int result = evaluateArabianNumbers(operation, firstNumberValue, secondNumberValue);
 
         validator.validateRomanNumbers(result, operation);
-        return Utils.ARA_TO_ROM.get(result);
+        return Utils.arabicToRoman(result);
     }
 
     private static int evaluateArabianNumbers(String operation, int firstNumberValue, int secondNumberValue) {
