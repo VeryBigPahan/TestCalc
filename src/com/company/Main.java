@@ -2,6 +2,7 @@ package com.company;
 
 import com.company.exception.ExpressionException;
 import com.company.exception.Messages;
+import com.company.number.MyNumber;
 import com.company.utils.Utils;
 import com.company.validation.Validator;
 
@@ -52,6 +53,8 @@ public class Main {
     }
 
     private static int evaluateArabianNumbers(String operation, int firstNumberValue, int secondNumberValue) {
+        validator.validateArabianNumbers(firstNumberValue, secondNumberValue);
+
         int result;
         switch (operation) {
             case "-":

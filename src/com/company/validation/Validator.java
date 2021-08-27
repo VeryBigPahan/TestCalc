@@ -1,8 +1,10 @@
 package com.company.validation;
 
-import com.company.MyNumber;
+import com.company.number.MyNumber;
+import com.company.exception.ArabianNumberException;
 import com.company.exception.ExpressionException;
 import com.company.exception.Messages;
+import com.company.utils.Utils;
 
 public class Validator {
 
@@ -40,6 +42,13 @@ public class Validator {
                 break;
             default:
                 throw new ExpressionException(Messages.INVALID_OPERATION_TYPE);
+        }
+    }
+
+    public void validateArabianNumbers(int firstNumberValue, int secondNumberValue) {
+        if ((firstNumberValue < Utils.MIN_NUMBER || firstNumberValue > Utils.MAX_NUMBER)
+                || (secondNumberValue < Utils.MIN_NUMBER || secondNumberValue > Utils.MAX_NUMBER)) {
+            throw new ArabianNumberException(Messages.ARABIAN_NUMBER_INCORRECT);
         }
     }
 }

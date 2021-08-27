@@ -12,5 +12,7 @@ public final class Messages {
 
     public static final String ROMAN_HAS_NOT_ZERO_NUMBER = "В римской системе нет 0";
     public static final String ROMAN_HAS_NOT_NEGATIVE_NUMBERS = "В римской системе нет отрицательных чисел";
-    //public static final String VERY_LARGE_ROMAN_NUMBER = "Очень большое римское число( %d - арабский вариант)";
+
+    public static final String ARABIAN_CAN_NOT_PARSE_TO_ROMAN = "%s число не может быть сконвертировано в римское число";
+    public static final String ARABIAN_NUMBER_INCORRECT = "Число %d больше 10 или меньше 0";
 }
